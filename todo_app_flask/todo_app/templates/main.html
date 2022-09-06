@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}
+Todo app {% if uncomplete %} ({{uncomplete}}) {% endif %}
+{% endblock %}
+
+{% block body %}
+<div style="margin-top: 50px" class="ui container">
+
+    <h1 class="ui center aligned header">Todo App</h1>
+
+    <form class="ui form" action="/add" method="post">
+        <div class="ui field">
+            <label for="title">Todo Title</label>
+            <input type="text" name="title" placeholder="Enter Todo...">
+            <label for="message">Todo Message</label>
+            <textarea name="message"></textarea>
+            <br>
+            <button class="ui blue button" type="submit">Add</button>
+        </div>
+    </form>
+
+    {% for todo in todo_list%}
+    <div class="ui segment">
+        <span class="ui big header">
+        {% if todo.title|length > 0 %}
+            {{todo.title}}
+        {% else %}
+            Todo {{todo.id}}
+        {% endif %}
+        </span>
+
+        <p class="">{{todo.message}}</p>
+
+        {% if todo.complete %}
+            <span style="width: 9em;" class="ui green label">Completed</span>
+        {% else %}
+            <span style="width: 9em;" class="ui gray label">Not Completed</span>
+        {% endif %}
+
+        <a class="ui blue button" href="/update/{{todo.id}}">Update</a>
+        <a class="ui red button " href="/delete/{{todo.id}}">Delete</a>
+    </div>
+    {% endfor %}
+
+    {% if todo_list|length > 0 %}
+        <br>
+
+        {% if uncomplete %}
+        <a class="ui small blue button" style="width: 14em;" href="{{url_for('mark_all_complete')}}">Mark all as complete</a>
+        {% else %}
+        <a class="ui small gray button" style="width: 14em;" href="{{url_for('mark_all_incomplete')}}">Mark all as incomplete</a>
+        {% endif %}
+
+        <a class="ui small red button " href="{{url_for('delete_all_complete')}}">Remove all complete</a>
+    {% endif %}
+
+</div>
+
+{% endblock %}
